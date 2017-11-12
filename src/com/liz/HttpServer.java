@@ -41,7 +41,7 @@ public class HttpServer extends Thread {
                         request = request.substring(1);
                     if (request.endsWith("/")||request.equals(""))
                         request = request + "index.html";
-                    File f = new File(request);
+                    File f = new File("htdocs/" + request);
                     showDoc(dataOutputStream,f);
                 } else {
                     dataOutputStream.writeBytes("400 Bad Request");
