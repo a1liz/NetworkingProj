@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by liz on 17/10/24.
@@ -53,6 +51,7 @@ public class Client extends JFrame {
         }
         contents = String.valueOf(type) + "|";
         String notice = "";
+        // 根据参数type，向Server发送不同的内容
         switch (type) {
             case 1:
                 notice = "发送获取时间请求";
@@ -84,6 +83,8 @@ public class Client extends JFrame {
 
         buf = new byte[256];
         packet = new DatagramPacket(buf,buf.length);
+        // 此处设置了一个超时阀值（500ms），超时之后会在日志部分收到提示信息。
+        // 否则会将正常获取到的Server信息打印至日志区域
         try {
             socket.setSoTimeout(500);
             socket.receive(packet);

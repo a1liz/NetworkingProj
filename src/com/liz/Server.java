@@ -56,6 +56,8 @@ public class Server extends JFrame {
                     } catch (SocketException e) {
                         break;
                     }
+                    // 接受数据并进行分析处理，利用|分割请求类型和请求的参数。
+                    // 如："4|this is a message" 表示接受文本消息，内容为:"this is a message"。
                     String received = new String(packet.getData());
                     String[] strings = received.split("\\|");
                     receiveEditorPane.setText(receiveEditorPane.getText() + "Received from client= " + packet.getAddress().getHostName() + ":" + packet.getPort() + "\n");
@@ -87,11 +89,13 @@ public class Server extends JFrame {
                             notice = "接收到信息";
                             break;
                     }
+                    // 将收到的消息输出至日志中。
                     receiveEditorPane.setText(receiveEditorPane.getText() + notice + ":" + contents + "\n");
                     buf = contents.getBytes();
                     InetAddress address = packet.getAddress();
                     int port = packet.getPort();
                     packet = new DatagramPacket(buf, buf.length, address, port);
+                    // 发送反馈信息至Client。
                     socket.send(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
