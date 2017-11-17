@@ -10,7 +10,8 @@ import java.util.StringTokenizer;
  */
 public class HttpServer extends Thread {
     public static final int port = 8090;
-    protected ServerSocket listen;
+    public ServerSocket listen;
+    private HttpServerGui gui;
 
     private class Connect extends Thread {
         Socket client;
@@ -34,7 +35,9 @@ public class HttpServer extends Thread {
         public void run() {
             try {
                 String request = bufferedReader.readLine();
-                System.out.println("Log: request: " + request);
+                String response = "Log: request: " + request;
+                System.out.println(response);
+                gui.setLog(response);
                 if (request != "null");
                 {
                     StringTokenizer stringTokenizer = new StringTokenizer(request);
@@ -71,12 +74,14 @@ public class HttpServer extends Thread {
                 out.writeBytes(response);
                 out.write(buf);
                 System.out.println("Log: send " + response);
+                gui.setLog(response);
                 out.flush();
                 out.close();
             } catch (FileNotFoundException e) {
                 String response = "HTTP/1.1 404 Not Found \r\n" + "Content-Type text/HTML \r\n\r\n" + "<!DOCTYPE html><html><head><title> 404 NOT FOUND</title></head><body>404 not found!</body></html>";
                 out.writeBytes(response);
                 System.out.println("Log: send " + response);
+                gui.setLog(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -120,6 +125,7 @@ public class HttpServer extends Thread {
     }
 
     public HttpServer() {
+        gui = new HttpServerGui();
         try {
             listen = new ServerSocket(port);
         } catch (IOException e) {
@@ -140,6 +146,7 @@ public class HttpServer extends Thread {
     }
 
     public static void main(String args[]) throws IOException {
+
         new HttpServer();
     }
 
